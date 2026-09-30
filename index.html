@@ -2,53 +2,206 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <title>POLYTACK</title>
+    <title>POLYTACK 3D</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
+
 
 <body>
 
-    <div class="game-container">
 
-        <h1>POLYTACK</h1>
+    <!-- GAME HUD -->
 
-        <div class="stats">
+    <div id="hud">
+
+        <div class="logo">
+            POLYTACK
+        </div>
+
+
+        <div class="hud-box">
 
             <span>
-                SCORE:
-                <b id="score">0</b>
+                TIME
             </span>
 
-            <span>
-                LIVES:
-                <b id="lives">3</b>
-            </span>
+            <strong id="timer">
+                00:00.000
+            </strong>
 
         </div>
 
 
-        <canvas id="gameCanvas"></canvas>
+        <div class="hud-box">
 
+            <span>
+                CHECKPOINT
+            </span>
 
-        <button id="restartButton">
-            RESTART
-        </button>
+            <strong id="checkpoint">
+                0 / 5
+            </strong>
 
-
-        <p class="instructions">
-            Use WASD or Arrow Keys to move
-        </p>
+        </div>
 
     </div>
 
 
-    <script src="game.js"></script>
+
+    <!-- START SCREEN -->
+
+    <div id="startScreen">
+
+        <div class="panel">
+
+            <h1>
+                POLYTACK
+            </h1>
+
+            <h2>
+                3D RACING
+            </h2>
+
+            <p>
+                Race through the track
+                and beat your best time.
+            </p>
+
+
+            <button id="startButton">
+                START RACE
+            </button>
+
+
+            <div class="controls">
+
+                <div>
+                    <b>W / ↑</b>
+                    Accelerate
+                </div>
+
+                <div>
+                    <b>S / ↓</b>
+                    Brake
+                </div>
+
+                <div>
+                    <b>A / ←</b>
+                    Steer Left
+                </div>
+
+                <div>
+                    <b>D / →</b>
+                    Steer Right
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- FINISH SCREEN -->
+
+    <div id="finishScreen">
+
+        <div class="panel">
+
+            <h1>
+                FINISH!
+            </h1>
+
+            <p>
+                Your time
+            </p>
+
+            <strong
+                id="finalTime"
+                class="final-time"
+            >
+                00:00.000
+            </strong>
+
+
+            <button id="restartButton">
+                RACE AGAIN
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- MOBILE CONTROLS -->
+
+    <div id="mobileControls">
+
+        <button
+            id="leftButton"
+        >
+            ◀
+        </button>
+
+
+        <button
+            id="brakeButton"
+        >
+            ▼
+        </button>
+
+
+        <button
+            id="accelerateButton"
+        >
+            ▲
+        </button>
+
+
+        <button
+            id="rightButton"
+        >
+            ▶
+        </button>
+
+    </div>
+
+
+
+    <!-- THREE.JS -->
+
+    <script type="importmap">
+
+    {
+        "imports": {
+            "three":
+            "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js"
+        }
+    }
+
+    </script>
+
+
+    <script
+        type="module"
+        src="game.js"
+    ></script>
+
 
 </body>
 
