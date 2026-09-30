@@ -1,13 +1,134 @@
 * {
     box-sizing: border-box;
+}
+
+
+html,
+body {
+
     margin: 0;
-    padding: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    overflow: hidden;
+
+    background: #111;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    color: white;
 }
 
 
 body {
 
-    min-height: 100vh;
+    position: relative;
+}
+
+
+/* =========================
+   HUD
+========================= */
+
+
+#hud {
+
+    position: fixed;
+
+    top: 20px;
+
+    left: 20px;
+
+    right: 20px;
+
+    z-index: 10;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    pointer-events: none;
+}
+
+
+.logo {
+
+    font-size: 28px;
+
+    font-weight: 900;
+
+    letter-spacing: 5px;
+
+    margin-right: auto;
+
+    text-shadow:
+        0 3px 10px
+        rgba(0,0,0,.5);
+}
+
+
+.hud-box {
+
+    min-width: 120px;
+
+    padding: 10px 16px;
+
+    background:
+        rgba(0,0,0,.55);
+
+    border:
+        1px solid
+        rgba(255,255,255,.2);
+
+    border-radius: 10px;
+
+    backdrop-filter:
+        blur(10px);
+
+    text-align: center;
+}
+
+
+.hud-box span {
+
+    display: block;
+
+    font-size: 10px;
+
+    color: #aaa;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 3px;
+}
+
+
+.hud-box strong {
+
+    font-size: 18px;
+}
+
+
+/* =========================
+   START / FINISH
+========================= */
+
+
+#startScreen,
+#finishScreen {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 20;
 
     display: flex;
 
@@ -15,81 +136,83 @@ body {
 
     align-items: center;
 
-    background: #080808;
+    background:
+        rgba(0,0,0,.45);
 
-    color: white;
-
-    font-family: Arial, sans-serif;
+    backdrop-filter:
+        blur(4px);
 }
 
 
-.game-container {
+#finishScreen {
 
-    width: 900px;
+    display: none;
+}
 
-    max-width: 95vw;
+
+.panel {
+
+    width: 420px;
+
+    max-width: 90%;
+
+    padding: 40px;
 
     text-align: center;
+
+    background:
+        rgba(10,10,10,.9);
+
+    border:
+        1px solid
+        rgba(255,255,255,.2);
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 20px 80px
+        rgba(0,0,0,.5);
 }
 
 
-h1 {
+.panel h1 {
 
-    font-size: 45px;
+    margin: 0;
 
-    letter-spacing: 10px;
+    font-size: 55px;
 
-    margin-bottom: 20px;
+    letter-spacing: 8px;
 }
 
 
-.stats {
+.panel h2 {
 
-    width: 800px;
+    margin-top: 5px;
 
-    max-width: 100%;
+    color: #aaa;
 
-    margin: auto;
-
-    margin-bottom: 10px;
-
-    display: flex;
-
-    justify-content: space-between;
-
-    font-size: 18px;
+    letter-spacing: 5px;
 }
 
 
-#gameCanvas {
+.panel p {
 
-    display: block;
+    color: #bbb;
 
-    width: 100%;
-
-    max-width: 800px;
-
-    aspect-ratio: 8 / 5;
-
-    margin: auto;
-
-    background: #151515;
-
-    border: 2px solid #555;
-
-    border-radius: 12px;
+    line-height: 1.6;
 }
 
 
-button {
+.panel button {
 
-    margin-top: 18px;
+    margin-top: 20px;
 
-    padding: 12px 25px;
+    padding:
+        15px 35px;
 
     border: none;
 
-    border-radius: 8px;
+    border-radius: 10px;
 
     background: white;
 
@@ -103,17 +226,153 @@ button {
 }
 
 
-button:hover {
+.panel button:hover {
 
-    background: #cccccc;
+    transform: scale(1.04);
 }
 
 
-.instructions {
+/* =========================
+   CONTROLS
+========================= */
 
-    margin-top: 12px;
 
-    color: #888;
+.controls {
 
-    font-size: 14px;
+    margin-top: 30px;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 10px;
+}
+
+
+.controls div {
+
+    padding: 10px;
+
+    border-radius: 8px;
+
+    background:
+        rgba(255,255,255,.07);
+
+    color: #aaa;
+
+    font-size: 12px;
+}
+
+
+.controls b {
+
+    display: block;
+
+    color: white;
+
+    margin-bottom: 4px;
+}
+
+
+/* =========================
+   FINISH
+========================= */
+
+
+.final-time {
+
+    display: block;
+
+    margin-top: 10px;
+
+    font-size: 45px;
+
+    font-weight: bold;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+
+#mobileControls {
+
+    position: fixed;
+
+    left: 0;
+
+    right: 0;
+
+    bottom: 20px;
+
+    z-index: 15;
+
+    display: none;
+
+    justify-content:
+        center;
+
+    gap: 12px;
+}
+
+
+#mobileControls button {
+
+    width: 60px;
+
+    height: 60px;
+
+    border: 1px solid
+        rgba(255,255,255,.3);
+
+    border-radius: 15px;
+
+    background:
+        rgba(0,0,0,.55);
+
+    color: white;
+
+    font-size: 24px;
+
+    touch-action: none;
+}
+
+
+@media (max-width: 700px) {
+
+    .logo {
+
+        font-size: 20px;
+
+        letter-spacing: 3px;
+    }
+
+
+    .hud-box {
+
+        min-width: 90px;
+
+        padding: 8px;
+    }
+
+
+    .hud-box strong {
+
+        font-size: 14px;
+    }
+
+
+    #mobileControls {
+
+        display: flex;
+    }
+
+
+    .panel h1 {
+
+        font-size: 38px;
+    }
+
 }
