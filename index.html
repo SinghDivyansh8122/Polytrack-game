@@ -23,14 +23,11 @@
 <body>
 
 
-    <!-- GAME HUD -->
-
     <div id="hud">
 
         <div class="logo">
             POLYTACK
         </div>
-
 
         <div class="hud-box">
 
@@ -44,47 +41,25 @@
 
         </div>
 
-
-        <div class="hud-box">
-
-            <span>
-                CHECKPOINT
-            </span>
-
-            <strong id="checkpoint">
-                0 / 5
-            </strong>
-
-        </div>
-
     </div>
 
-
-
-    <!-- START SCREEN -->
 
     <div id="startScreen">
 
         <div class="panel">
 
-            <h1>
-                POLYTACK
-            </h1>
+            <h1>POLYTACK</h1>
 
-            <h2>
-                3D RACING
-            </h2>
+            <h2>3D RACING</h2>
 
             <p>
                 Race through the track
                 and beat your best time.
             </p>
 
-
             <button id="startButton">
                 START RACE
             </button>
-
 
             <div class="controls">
 
@@ -115,19 +90,14 @@
     </div>
 
 
-
-    <!-- FINISH SCREEN -->
-
     <div id="finishScreen">
 
         <div class="panel">
 
-            <h1>
-                FINISH!
-            </h1>
+            <h1>FINISH!</h1>
 
             <p>
-                Your time
+                Your time:
             </p>
 
             <strong
@@ -136,7 +106,6 @@
             >
                 00:00.000
             </strong>
-
 
             <button id="restartButton">
                 RACE AGAIN
@@ -147,61 +116,10 @@
     </div>
 
 
-
-    <!-- MOBILE CONTROLS -->
-
-    <div id="mobileControls">
-
-        <button
-            id="leftButton"
-        >
-            ◀
-        </button>
-
-
-        <button
-            id="brakeButton"
-        >
-            ▼
-        </button>
-
-
-        <button
-            id="accelerateButton"
-        >
-            ▲
-        </button>
-
-
-        <button
-            id="rightButton"
-        >
-            ▶
-        </button>
-
-    </div>
-
-
-
-    <!-- THREE.JS -->
-
-    <script type="importmap">
-
-    {
-        "imports": {
-            "three":
-            "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js"
-        }
-    }
-
-    </script>
-
-
     <script
         type="module"
         src="game.js"
     ></script>
-
 
 </body>
 
