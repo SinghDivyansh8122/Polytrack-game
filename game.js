@@ -1,95 +1,364 @@
-// =====================================
-// POLYTACK GAME
-// =====================================
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js";
 
 
-const canvas =
-    document.getElementById("gameCanvas");
+// ================================
+// SETUP
+// ================================
 
-const ctx =
-    canvas.getContext("2d");
+const scene = new THREE.Scene();
+
+scene.background = new THREE.Color(0x87ceeb);
+
+scene.fog = new THREE.Fog(
+    0x87ceeb,
+    80,
+    500
+);
 
 
-// =====================================
-// CANVAS
-// =====================================
+// CAMERA
 
-canvas.width = 800;
+const camera = new THREE.PerspectiveCamera(
+    65,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000
+);
 
-canvas.height = 500;
+camera.position.set(0, 5, 12);
 
 
-// =====================================
+// RENDERER
+
+const renderer = new THREE.WebGLRenderer({
+    antialias: true
+});
+
+renderer.setSize(
+    window.innerWidth,
+    window.innerHeight
+);
+
+renderer.setPixelRatio(
+    Math.min(window.devicePixelRatio, 2)
+);
+
+renderer.shadowMap.enabled = true;
+
+document.body.appendChild(renderer.domElement);
+
+
+// ================================
+// LIGHT
+// ================================
+
+const ambientLight =
+    new THREE.HemisphereLight(
+        0xffffff,
+        0x557755,
+        2
+    );
+
+scene.add(ambientLight);
+
+
+const sun =
+    new THREE.DirectionalLight(
+        0xffffff,
+        3
+    );
+
+sun.position.set(50, 100, 50);
+
+sun.castShadow = true;
+
+scene.add(sun);
+
+
+// ================================
+// MATERIALS
+// ================================
+
+const roadMaterial =
+    new THREE.MeshStandardMaterial({
+        color: 0x333333
+    });
+
+
+const grassMaterial =
+    new THREE.MeshStandardMaterial({
+        color: 0x3d8c40
+    });
+
+
+const carMaterial =
+    new THREE.MeshStandardMaterial({
+        color: 0x2277ff,
+        metalness: 0.3,
+        roughness: 0.3
+    });
+
+
+const wheelMaterial =
+    new THREE.MeshStandardMaterial({
+        color: 0x111111
+    });
+
+
+const barrierMaterial =
+    new THREE.MeshStandardMaterial({
+        color: 0xff3344
+    });
+
+
+// ================================
+// GROUND
+// ================================
+
+const ground =
+    new THREE.Mesh(
+        new THREE.BoxGeometry(
+            500,
+            1,
+            500
+        ),
+        grassMaterial
+    );
+
+ground.position.y = -1;
+
+ground.receiveShadow = true;
+
+scene.add(ground);
+
+
+// ================================
+// ROAD
+// ================================
+
+const roadWidth = 14;
+
+const road =
+    new THREE.Mesh(
+        new THREE.BoxGeometry(
+            roadWidth,
+            0.5,
+            500
+        ),
+        roadMaterial
+    );
+
+road.position.set(
+    0,
+    -0.5,
+    -220
+);
+
+road.receiveShadow = true;
+
+scene.add(road);
+
+
+// ================================
+// ROAD EDGES
+// ================================
+
+function createBarrier(x) {
+
+    const barrier =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                0.5,
+                0.7,
+                500
+            ),
+            barrierMaterial
+        );
+
+    barrier.position.set(
+        x,
+        0,
+        -220
+    );
+
+    barrier.castShadow = true;
+
+    scene.add(barrier);
+}
+
+
+createBarrier(-7);
+
+createBarrier(7);
+
+
+// ================================
+// ROAD MARKINGS
+// ================================
+
+for (
+    let z = 0;
+    z > -500;
+    z -= 12
+) {
+
+    const line =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                0.3,
+                0.05,
+                6
+            ),
+            new THREE.MeshStandardMaterial({
+                color: 0xffffff
+            })
+        );
+
+    line.position.set(
+        0,
+        -0.2,
+        z
+    );
+
+    scene.add(line);
+}
+
+
+// ================================
+// CAR
+// ================================
+
+const car = new THREE.Group();
+
+scene.add(car);
+
+
+// CAR BODY
+
+const body =
+    new THREE.Mesh(
+        new THREE.BoxGeometry(
+            2.2,
+            0.7,
+            4
+        ),
+        carMaterial
+    );
+
+body.position.y = 0.8;
+
+body.castShadow = true;
+
+car.add(body);
+
+
+// CAR ROOF
+
+const roof =
+    new THREE.Mesh(
+        new THREE.BoxGeometry(
+            1.5,
+            0.6,
+            1.7
+        ),
+        new THREE.MeshStandardMaterial({
+            color: 0x111827
+        })
+    );
+
+roof.position.set(
+    0,
+    1.35,
+    0.2
+);
+
+roof.castShadow = true;
+
+car.add(roof);
+
+
+// ================================
+// WHEELS
+// ================================
+
+function createWheel(x, z) {
+
+    const wheel =
+        new THREE.Mesh(
+            new THREE.CylinderGeometry(
+                0.48,
+                0.48,
+                0.35,
+                20
+            ),
+            wheelMaterial
+        );
+
+    wheel.rotation.z =
+        Math.PI / 2;
+
+    wheel.position.set(
+        x,
+        0.45,
+        z
+    );
+
+    wheel.castShadow = true;
+
+    car.add(wheel);
+}
+
+
+createWheel(-1.05, -1.3);
+
+createWheel(1.05, -1.3);
+
+createWheel(-1.05, 1.3);
+
+createWheel(1.05, 1.3);
+
+
+// ================================
+// CAR POSITION
+// ================================
+
+car.position.set(
+    0,
+    0,
+    0
+);
+
+
+// ================================
 // GAME VARIABLES
-// =====================================
+// ================================
 
-let score = 0;
+let gameStarted = false;
 
-let lives = 3;
+let gameFinished = false;
 
-let keys = {};
+let startTime = 0;
 
+let speed = 0;
 
-// =====================================
-// PLAYER
-// =====================================
+const maxSpeed = 1.2;
 
-const player = {
+const acceleration = 0.018;
 
-    x: 100,
+const braking = 0.035;
 
-    y: 235,
+const friction = 0.008;
 
-    width: 30,
+const steeringPower = 0.06;
 
-    height: 30,
-
-    speed: 5
-
-};
+const keys = {};
 
 
-// =====================================
-// COIN
-// =====================================
+// ================================
+// KEYBOARD
+// ================================
 
-const coin = {
-
-    x: 600,
-
-    y: 200,
-
-    radius: 12
-
-};
-
-
-// =====================================
-// ENEMY
-// =====================================
-
-const enemy = {
-
-    x: 400,
-
-    y: 100,
-
-    width: 30,
-
-    height: 30,
-
-    speedX: 2,
-
-    speedY: 2
-
-};
-
-
-// =====================================
-// KEYBOARD INPUT
-// =====================================
-
-document.addEventListener(
+window.addEventListener(
     "keydown",
     function(event) {
 
@@ -101,7 +370,7 @@ document.addEventListener(
 );
 
 
-document.addEventListener(
+window.addEventListener(
     "keyup",
     function(event) {
 
@@ -113,11 +382,91 @@ document.addEventListener(
 );
 
 
-// =====================================
-// PLAYER MOVEMENT
-// =====================================
+// ================================
+// START GAME
+// ================================
 
-function movePlayer() {
+const startButton =
+    document.getElementById(
+        "startButton"
+    );
+
+
+startButton.addEventListener(
+    "click",
+    function() {
+
+        console.log("RACE STARTED");
+
+        gameStarted = true;
+
+        gameFinished = false;
+
+        startTime =
+            performance.now();
+
+        speed = 0;
+
+        car.position.set(
+            0,
+            0,
+            0
+        );
+
+        document.getElementById(
+            "startScreen"
+        ).style.display = "none";
+
+    }
+);
+
+
+// ================================
+// RESTART
+// ================================
+
+const restartButton =
+    document.getElementById(
+        "restartButton"
+    );
+
+
+restartButton.addEventListener(
+    "click",
+    function() {
+
+        gameStarted = true;
+
+        gameFinished = false;
+
+        startTime =
+            performance.now();
+
+        speed = 0;
+
+        car.position.set(
+            0,
+            0,
+            0
+        );
+
+        document.getElementById(
+            "finishScreen"
+        ).style.display = "none";
+
+    }
+);
+
+
+// ================================
+// CAR MOVEMENT
+// ================================
+
+function updateCar() {
+
+    if (!gameStarted) {
+        return;
+    }
 
 
     if (
@@ -125,7 +474,7 @@ function movePlayer() {
         keys["arrowup"]
     ) {
 
-        player.y -= player.speed;
+        speed += acceleration;
 
     }
 
@@ -135,9 +484,33 @@ function movePlayer() {
         keys["arrowdown"]
     ) {
 
-        player.y += player.speed;
+        speed -= braking;
 
     }
+
+
+    if (
+        !keys["w"] &&
+        !keys["arrowup"] &&
+        !keys["s"] &&
+        !keys["arrowdown"]
+    ) {
+
+        speed -= friction;
+
+    }
+
+
+    speed = Math.max(
+        0,
+        Math.min(
+            maxSpeed,
+            speed
+        )
+    );
+
+
+    let steering = 0;
 
 
     if (
@@ -145,7 +518,7 @@ function movePlayer() {
         keys["arrowleft"]
     ) {
 
-        player.x -= player.speed;
+        steering = -1;
 
     }
 
@@ -155,489 +528,203 @@ function movePlayer() {
         keys["arrowright"]
     ) {
 
-        player.x += player.speed;
+        steering = 1;
 
     }
 
 
-    // LEFT WALL
-
-    if (player.x < 0) {
-
-        player.x = 0;
-
-    }
+    car.position.x +=
+        steering *
+        speed *
+        0.7;
 
 
-    // TOP WALL
-
-    if (player.y < 0) {
-
-        player.y = 0;
-
-    }
+    car.position.z -=
+        speed;
 
 
-    // RIGHT WALL
+    car.rotation.z =
+        -steering * 0.12;
 
-    if (
-        player.x + player.width >
-        canvas.width
-    ) {
 
-        player.x =
-            canvas.width -
-            player.width;
+    // Keep car on track
+
+    if (car.position.x < -5.5) {
+
+        car.position.x = -5.5;
 
     }
 
 
-    // BOTTOM WALL
+    if (car.position.x > 5.5) {
 
-    if (
-        player.y + player.height >
-        canvas.height
-    ) {
-
-        player.y =
-            canvas.height -
-            player.height;
+        car.position.x = 5.5;
 
     }
-
 }
 
 
-// =====================================
-// ENEMY MOVEMENT
-// =====================================
+// ================================
+// CAMERA
+// ================================
 
-function moveEnemy() {
+function updateCamera() {
 
-
-    enemy.x += enemy.speedX;
-
-    enemy.y += enemy.speedY;
-
-
-    if (
-        enemy.x <= 0 ||
-        enemy.x + enemy.width >=
-        canvas.width
-    ) {
-
-        enemy.speedX *= -1;
-
-    }
-
-
-    if (
-        enemy.y <= 0 ||
-        enemy.y + enemy.height >=
-        canvas.height
-    ) {
-
-        enemy.speedY *= -1;
-
-    }
-
-}
-
-
-// =====================================
-// RECTANGLE COLLISION
-// =====================================
-
-function rectangleCollision(
-    a,
-    b
-) {
-
-    return (
-
-        a.x <
-        b.x + b.width &&
-
-        a.x + a.width >
-        b.x &&
-
-        a.y <
-        b.y + b.height &&
-
-        a.y + a.height >
-        b.y
-
-    );
-
-}
-
-
-// =====================================
-// COIN COLLECTION
-// =====================================
-
-function collectCoin() {
-
-
-    const dx =
-
-        player.x +
-        player.width / 2 -
-        coin.x;
-
-
-    const dy =
-
-        player.y +
-        player.height / 2 -
-        coin.y;
-
-
-    const distance =
-
-        Math.sqrt(
-            dx * dx +
-            dy * dy
+    const target =
+        new THREE.Vector3(
+            car.position.x,
+            car.position.y + 4,
+            car.position.z + 10
         );
 
 
-    if (distance < 30) {
-
-
-        score += 10;
-
-
-        document.getElementById(
-            "score"
-        ).textContent = score;
-
-
-        // RANDOM COIN LOCATION
-
-        coin.x =
-
-            Math.random() *
-            (canvas.width - 60) +
-            30;
-
-
-        coin.y =
-
-            Math.random() *
-            (canvas.height - 60) +
-            30;
-
-    }
-
-}
-
-
-// =====================================
-// ENEMY COLLISION
-// =====================================
-
-function enemyCollision() {
-
-
-    if (
-        rectangleCollision(
-            player,
-            enemy
-        )
-    ) {
-
-
-        lives--;
-
-
-        document.getElementById(
-            "lives"
-        ).textContent = lives;
-
-
-        // RESET PLAYER
-
-        player.x = 100;
-
-        player.y = 235;
-
-
-        // GAME OVER
-
-        if (lives <= 0) {
-
-
-            alert(
-                "GAME OVER!\n\nYour score: " +
-                score
-            );
-
-
-            resetGame();
-
-        }
-
-    }
-
-}
-
-
-// =====================================
-// BACKGROUND
-// =====================================
-
-function drawBackground() {
-
-
-    ctx.fillStyle = "#151515";
-
-
-    ctx.fillRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
+    camera.position.lerp(
+        target,
+        0.08
     );
 
 
-    // GRID
-
-    ctx.strokeStyle = "#242424";
-
-    ctx.lineWidth = 1;
-
-
-    for (
-        let x = 0;
-        x < canvas.width;
-        x += 40
-    ) {
+    camera.lookAt(
+        car.position.x,
+        car.position.y + 0.8,
+        car.position.z - 15
+    );
+}
 
 
-        ctx.beginPath();
+// ================================
+// TIMER
+// ================================
 
+function updateTimer() {
 
-        ctx.moveTo(
-            x,
-            0
-        );
-
-
-        ctx.lineTo(
-            x,
-            canvas.height
-        );
-
-
-        ctx.stroke();
-
+    if (!gameStarted) {
+        return;
     }
 
 
-    for (
-        let y = 0;
-        y < canvas.height;
-        y += 40
-    ) {
+    const elapsed =
+        performance.now() -
+        startTime;
 
 
-        ctx.beginPath();
+    const seconds =
+        elapsed / 1000;
 
 
-        ctx.moveTo(
-            0,
-            y
+    const minutes =
+        Math.floor(
+            seconds / 60
         );
 
 
-        ctx.lineTo(
-            canvas.width,
-            y
+    const remainingSeconds =
+        Math.floor(
+            seconds % 60
         );
 
 
-        ctx.stroke();
-
-    }
-
-}
-
-
-// =====================================
-// DRAW PLAYER
-// =====================================
-
-function drawPlayer() {
+    const milliseconds =
+        Math.floor(
+            elapsed % 1000
+        );
 
 
-    ctx.fillStyle = "#00ff88";
-
-
-    ctx.fillRect(
-
-        player.x,
-
-        player.y,
-
-        player.width,
-
-        player.height
-
-    );
-
-}
-
-
-// =====================================
-// DRAW COIN
-// =====================================
-
-function drawCoin() {
-
-
-    ctx.beginPath();
-
-
-    ctx.arc(
-
-        coin.x,
-
-        coin.y,
-
-        coin.radius,
-
-        0,
-
-        Math.PI * 2
-
-    );
-
-
-    ctx.fillStyle = "#ffd700";
-
-
-    ctx.fill();
-
-
-    ctx.closePath();
-
-}
-
-
-// =====================================
-// DRAW ENEMY
-// =====================================
-
-function drawEnemy() {
-
-
-    ctx.fillStyle = "#ff3b3b";
-
-
-    ctx.fillRect(
-
-        enemy.x,
-
-        enemy.y,
-
-        enemy.width,
-
-        enemy.height
-
-    );
-
-}
-
-
-// =====================================
-// RESET GAME
-// =====================================
-
-function resetGame() {
-
-
-    score = 0;
-
-    lives = 3;
+    const text =
+        String(minutes).padStart(2, "0")
+        + ":"
+        +
+        String(remainingSeconds).padStart(2, "0")
+        + "."
+        +
+        String(milliseconds).padStart(3, "0");
 
 
     document.getElementById(
-        "score"
-    ).textContent = score;
-
-
-    document.getElementById(
-        "lives"
-    ).textContent = lives;
-
-
-    player.x = 100;
-
-    player.y = 235;
-
-
-    coin.x = 600;
-
-    coin.y = 200;
-
+        "timer"
+    ).textContent = text;
 }
 
 
-// =====================================
-// RESTART BUTTON
-// =====================================
+// ================================
+// FINISH
+// ================================
 
-document
-    .getElementById("restartButton")
-    .addEventListener(
-        "click",
-        resetGame
-    );
+function checkFinish() {
+
+    if (
+        car.position.z < -480 &&
+        !gameFinished
+    ) {
+
+        gameFinished = true;
+
+        speed = 0;
 
 
-// =====================================
+        document.getElementById(
+            "finishScreen"
+        ).style.display = "flex";
+
+
+        document.getElementById(
+            "finalTime"
+        ).textContent =
+            document.getElementById(
+                "timer"
+            ).textContent;
+    }
+}
+
+
+// ================================
 // GAME LOOP
-// =====================================
+// ================================
 
-function gameLoop() {
-
-
-    // DRAW BACKGROUND
-
-    drawBackground();
-
-
-    // UPDATE
-
-    movePlayer();
-
-    moveEnemy();
-
-    collectCoin();
-
-    enemyCollision();
-
-
-    // DRAW
-
-    drawCoin();
-
-    drawEnemy();
-
-    drawPlayer();
-
-
-    // LOOP
+function animate() {
 
     requestAnimationFrame(
-        gameLoop
+        animate
     );
 
+
+    updateCar();
+
+    updateCamera();
+
+    updateTimer();
+
+    checkFinish();
+
+
+    renderer.render(
+        scene,
+        camera
+    );
 }
 
 
-// =====================================
-// START GAME
-// =====================================
+animate();
 
-gameLoop();
+
+// ================================
+// RESIZE
+// ================================
+
+window.addEventListener(
+    "resize",
+    function() {
+
+        camera.aspect =
+            window.innerWidth /
+            window.innerHeight;
+
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(
+            window.innerWidth,
+            window.innerHeight
+        );
+
+    }
+);
